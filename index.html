@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surface Paints – Email Signature Generator</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #141414;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 16px 60px;
+    color: #fff;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header { text-align: center; margin-bottom: 32px; }
+  .page-header .brand {
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; margin-bottom: 6px;
+  }
+  .brand-icon {
+    width: 40px; height: 40px; background: #E05A1E;
+    border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; font-weight: 900; font-size: 13px;
+    color: #fff; letter-spacing: -0.5px; flex-shrink: 0;
+  }
+  .page-header h1 { font-size: 21px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+  .page-header p  { font-size: 12px; color: #777; margin-top: 5px; }
+
+  /* ── LAYOUT ── */
+  .builder {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 22px;
+    width: 100%;
+    max-width: 1060px;
+  }
+
+  /* ── FORM PANEL ── */
+  .form-panel {
+    background: #1e1e1e; border-radius: 14px;
+    padding: 24px 20px; border: 1px solid #2e2e2e;
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .sec-label {
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.8px;
+    color: #E05A1E; margin: 18px 0 12px;
+  }
+  .sec-label:first-child { margin-top: 0; }
+  .hr { height: 1px; background: #2a2a2a; margin: 4px 0 6px; }
+
+  .field { margin-bottom: 11px; }
+  .field label {
+    display: block; font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.9px;
+    color: #666; margin-bottom: 4px;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%; background: #141414;
+    border: 1px solid #2e2e2e; border-radius: 7px;
+    padding: 8px 11px; font-size: 13px; color: #ddd;
+    outline: none; transition: border-color 0.2s;
+    font-family: inherit; resize: none;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus { border-color: #E05A1E; }
+  .field input::placeholder,
+  .field textarea::placeholder { color: #3a3a3a; }
+  .field select option { background: #1e1e1e; }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .btn-copy {
+    width: 100%; background: #E05A1E; color: #fff;
+    border: none; border-radius: 9px; padding: 13px;
+    font-size: 14px; font-weight: 800; cursor: pointer;
+    letter-spacing: 0.4px; transition: background 0.2s, transform 0.1s;
+    margin-top: 10px;
+  }
+  .btn-copy:hover  { background: #c94d17; }
+  .btn-copy:active { transform: scale(0.98); }
+  .copy-hint { font-size: 11px; color: #444; text-align: center; margin-top: 8px; line-height: 1.7; }
+
+  /* ── PREVIEW PANEL ── */
+  .preview-panel {
+    background: #1e1e1e; border-radius: 14px;
+    padding: 24px 20px; border: 1px solid #2e2e2e;
+  }
+  .preview-label {
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.8px;
+    color: #E05A1E; margin-bottom: 16px;
+  }
+  .email-chrome {
+    background: #e8e8e8; border-radius: 10px; overflow: hidden;
+    border: 1px solid #ccc;
+  }
+  .email-chrome-bar {
+    background: #d0d0d0; padding: 8px 14px;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .email-chrome-body { background: #f6f6f6; padding: 18px 20px; }
+  .email-meta { font-size: 11px; color: #888; font-family: Arial,sans-serif; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
+  .email-meta strong { color: #555; }
+  .email-body-text {
+    font-size: 13px; color: #333; line-height: 1.75;
+    font-family: Arial, sans-serif; margin-bottom: 20px;
+  }
+
+  /* ── INSTALL GUIDE ── */
+  .install-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin-top: 16px;
+  }
+  .install-card {
+    background: #141414; border-radius: 9px;
+    padding: 14px 16px; border: 1px solid #2a2a2a;
+  }
+  .install-card h3 {
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: #E05A1E; margin-bottom: 8px;
+  }
+  .install-card ol {
+    padding-left: 14px; font-size: 11px;
+    color: #666; line-height: 2;
+  }
+  .install-card li strong { color: #999; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(14px);
+    background: #E05A1E; color: #fff;
+    padding: 11px 26px; border-radius: 30px;
+    font-size: 13px; font-weight: 700;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s; z-index: 9999;
+    box-shadow: 0 4px 20px rgba(224,90,30,0.4);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="brand">
+    <div class="brand-icon">SP</div>
+    <h1>Surface Paints — Email Signature Generator</h1>
+  </div>
+  <p>Fill in employee details · Preview updates instantly · Copy &amp; paste into Gmail or Outlook</p>
+</div>
+
+<div class="builder">
+
+  <!-- ══════════════ FORM ══════════════ -->
+  <div class="form-panel">
+
+    <div class="sec-label">👤 Employee Details</div>
+    <div class="field">
+      <label>Full Name</label>
+      <input type="text" id="f-name" placeholder="Ruchika Dixit" value="Ruchika Dixit">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Designation</label>
+        <input type="text" id="f-desig" placeholder="Senior Executive" value="Senior Executive">
+      </div>
+      <div class="field">
+        <label>Department</label>
+        <input type="text" id="f-dept" placeholder="Sales & Marketing">
+      </div>
+    </div>
+    <div class="field">
+      <label>Tagline / Quote (optional)</label>
+      <input type="text" id="f-tagline" placeholder="e.g. Coating Excellence Since 1963">
+    </div>
+
+    <div class="hr"></div>
+    <div class="sec-label">📞 Contact</div>
+    <div class="row2">
+      <div class="field">
+        <label>Mobile</label>
+        <input type="text" id="f-phone" placeholder="+91 96511 11333" value="+91 96511 11333">
+      </div>
+      <div class="field">
+        <label>Direct / Office</label>
+        <input type="text" id="f-phone2" placeholder="+91 522 000 0000">
+      </div>
+    </div>
+    <div class="field">
+      <label>Email Address</label>
+      <input type="email" id="f-email" placeholder="ruchika@surfacepaints.com" value="ruchika@surfacepaints.com">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>LinkedIn URL</label>
+        <input type="text" id="f-linkedin" placeholder="linkedin.com/in/name">
+      </div>
+      <div class="field">
+        <label>WhatsApp No.</label>
+        <input type="text" id="f-wa" placeholder="+91 96511 11333">
+      </div>
+    </div>
+
+    <div class="hr"></div>
+    <div class="sec-label">⚙️ Options</div>
+    <div class="field">
+      <label>Signature Style</label>
+      <select id="f-style">
+        <option value="full">Full — Logo · Contact · Stats · Certs</option>
+        <option value="compact">Compact — Logo · Contact only</option>
+      </select>
+    </div>
+
+    <button class="btn-copy" onclick="copySig()">⎘ &nbsp; Copy Signature to Clipboard</button>
+    <p class="copy-hint">Copies rich HTML · paste directly into<br>Gmail or Outlook signature editor</p>
+  </div>
+
+  <!-- ══════════════ PREVIEW ══════════════ -->
+  <div class="preview-panel">
+    <div class="preview-label">📧 Live Preview</div>
+
+    <div class="email-chrome">
+      <div class="email-chrome-bar">
+        <div class="dot" style="background:#ff5f57;"></div>
+        <div class="dot" style="background:#ffbd2e;"></div>
+        <div class="dot" style="background:#28c840;"></div>
+        <span style="font-size:11px;color:#888;margin-left:8px;font-family:Arial;">New Message</span>
+      </div>
+      <div class="email-chrome-body">
+        <div class="email-meta" id="mock-meta">
+          <strong>From:</strong> Ruchika Dixit &lt;ruchika@surfacepaints.com&gt; &nbsp;·&nbsp;
+          <strong>To:</strong> client@example.com &nbsp;·&nbsp;
+          <strong>Subject:</strong> Project Inquiry – Surface Paints
+        </div>
+        <div class="email-body-text">
+          Dear Sir/Madam,<br><br>
+          Thank you for your interest in our coating solutions. Please find the
+          requested details attached. We look forward to a long and productive
+          association with your esteemed organisation.<br><br>
+          Warm regards,
+        </div>
+        <div id="sig-preview"></div>
+      </div>
+    </div>
+
+    <div class="install-grid">
+      <div class="install-card">
+        <h3>📨 Install in Gmail</h3>
+        <ol>
+          <li>Click <strong>Copy Signature</strong> above</li>
+          <li>Gmail → <strong>Settings ⚙</strong> → <strong>See all settings</strong></li>
+          <li>Scroll to <strong>Signature</strong> section → New</li>
+          <li>Click <strong>&lt;/&gt;</strong> (HTML mode) → Paste</li>
+          <li>Click <strong>Save Changes</strong></li>
+        </ol>
+      </div>
+      <div class="install-card">
+        <h3>📬 Install in Outlook</h3>
+        <ol>
+          <li>Click <strong>Copy Signature</strong> above</li>
+          <li>Outlook → <strong>File</strong> → <strong>Options</strong></li>
+          <li>Go to <strong>Mail</strong> → <strong>Signatures</strong></li>
+          <li>New → paste into the <strong>HTML editor</strong></li>
+          <li>Click <strong>OK</strong> to save</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">✓ Signature copied to clipboard!</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  BRAND + COMPANY CONSTANTS
+// ═══════════════════════════════════════════════
+const LOGO = "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";
+
+const C = {
+  orange   : "#E05A1E",
+  dark     : "#1C1C1C",
+  mid      : "#444444",
+  muted    : "#888888",
+  divider  : "#e2cdc3",
+  bgCard   : "#ffffff",
+  bgStripe : "#FFF8F4",
+  bgStats  : "#FEF0E8",
+};
+
+const CO = {
+  tagline  : "SURFACE PAINTS PRIVATE LIMITED · LUCKNOW",
+  website  : "www.surfacepaints.com",
+  address1 : "15 KM Stone, Vill. Navi Kot Nandana,",
+  address2 : "Lucknow – 226201, U.P., India",
+  phone_hq : "+91 522 269 0000",
+  certBadges: [
+    "3 ISO Certifications, 6 BIS Certifications"
+  ],
+  stats: [
+    { val:"3,017+",    lbl:"Clients"           },
+    { val:"62+",       lbl:"Years of Legacy"   },
+    { val:"16+",       lbl:"Countries"         },
+    { val:"9,196 MT",  lbl:"Annual Capacity"   },
+    { val:"₹1016 Cr+", lbl:"Large Taxpayer Unit"},
+    { val:"95685 mt/kl",lbl:"Coatings Delivered"},
+    { val:"3 ISI",     lbl:"Certificates"      },
+    { val:"6 BIS",     lbl:"Licences"          },
+  ],
+  products: ["Powder Coatings","Epoxy Paints","PU Paints","Enamels","Hammer Tex Finishes","Kniffing Putty","Alkyd Resins","Speciality Coatings"],
+  taglineFooter: "Powder &amp; Industrial Liquid Paint Manufacturer",
+};
+
+// ═══════════════════════════════════════════════
+//  UNICODE ICONS — survive Gmail / Outlook paste
+// ═══════════════════════════════════════════════
+function ico(type) {
+  return ({
+    phone : "&#128222;",
+    mobile: "&#128241;",
+    mail  : "&#9993;",
+    web   : "&#127760;",
+    pin   : "&#128205;",
+    li    : "&#128279;",
+    wa    : "&#128172;",
+    hq    : "&#127968;",
+  })[type] || "&#8226;";
+}
+
+// ═══════════════════════════════════════════════
+//  TABLE-BASED ROW (email-safe)
+// ═══════════════════════════════════════════════
+function contactRow(iconType, content) {
+  return `
+  <tr>
+    <td width="18" style="vertical-align:middle;padding:1px 6px 1px 0;
+      font-size:13px;line-height:1;font-family:Arial,Helvetica,sans-serif;">
+      ${ico(iconType)}
+    </td>
+    <td style="vertical-align:middle;font-family:Arial,Helvetica,sans-serif;font-size:11.5px;color:${C.mid};padding:1px 0;">
+      ${content}
+    </td>
+  </tr>`;
+}
+
+// ═══════════════════════════════════════════════
+//  MAIN SIGNATURE BUILDER
+// ═══════════════════════════════════════════════
+function buildSig(name, desig, dept, tagline, phone, phone2, email, linkedin, wa, style) {
+
+  // ── Optional fields ──
+  const deptBadge = dept ? `
+    <span style="display:inline-block;background:${C.bgStats};border:1px solid ${C.divider};
+      border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700;
+      color:${C.orange};letter-spacing:0.8px;text-transform:uppercase;margin-top:4px;">
+      ${dept}
+    </span>` : "";
+
+  const taglineRow = tagline ? `
+    <tr><td colspan="2" style="padding:6px 0 0;font-family:Arial,Helvetica,sans-serif;
+      font-size:10.5px;color:${C.muted};font-style:italic;letter-spacing:0.3px;">
+      "${tagline}"
+    </td></tr>` : "";
+
+  const phone2Row = phone2
+    ? contactRow("phone", `<a href="tel:${phone2.replace(/\s/g,"")}" style="color:${C.mid};text-decoration:none;">${phone2} <span style="color:${C.muted};font-size:10px;">(Office)</span></a>`)
+    : "";
+
+  const waRow = wa
+    ? contactRow("wa", `<a href="https://wa.me/${wa.replace(/[+\s]/g,"")}" style="color:#25D366;text-decoration:none;">WhatsApp: ${wa}</a>`)
+    : "";
+
+  const liRow = linkedin
+    ? contactRow("li", `<a href="${linkedin.startsWith("http") ? linkedin : "https://"+linkedin}" style="color:${C.orange};text-decoration:none;">${linkedin.replace(/https?:\/\/(www\.)?/,"")}</a>`)
+    : "";
+
+  // ── Stats grid (1 row × 8 cols) ──
+  const statsBlock = style === "full" ? `
+    <!-- DIVIDER -->
+    <tr><td colspan="2" style="padding:9px 0 7px;">
+      <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+          ${CO.stats.map((s,i) => `
+          <td align="center" width="11%" style="
+            background:#f7ede6;
+            border-radius:6px;
+            padding:6px 4px;
+            border: 1px solid ${C.divider};">
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;
+              font-weight:900;color:${C.orange};line-height:1.1;">${s.val}</div>
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:7.5px;
+              color:${C.muted};
+              text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;">${s.lbl}</div>
+          </td>
+          ${i<7?'<td width="3"></td>':''}`).join("")}
+        </tr>
+      </table>
+    </td></tr>
+
+    <!-- PRODUCTS LINE -->
+    <tr><td colspan="2" style="padding-bottom:6px;">
+      <div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;
+        color:${C.muted};letter-spacing:0.2px;line-height:1.5;">
+        <span style="color:${C.orange};font-weight:700;">Products:</span> ${CO.products.join(" · ")}
+      </div>
+    </td></tr>
+
+    <!-- FOOTER TAGLINE -->
+    <tr><td colspan="2">
+      <div style="font-family:Arial,Helvetica,sans-serif;font-size:9.5px;
+        color:${C.muted};border-top:1px solid ${C.divider};
+        padding-top:6px;letter-spacing:0.2px;line-height:1.5;">
+        ${CO.taglineFooter}
+      </div>
+    </td></tr>
+  ` : "";
+
+  // ── Assemble ──
+  return `
+<!--[SURFACE PAINTS · EMAIL SIGNATURE]-->
+<table cellpadding="0" cellspacing="0" border="0"
+  style="font-family:Arial,Helvetica,sans-serif;
+         border-collapse:separate;
+         max-width:520px;width:100%;
+         border-radius:8px;
+         overflow:hidden;
+         box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+
+  <!-- BODY -->
+  <tr>
+    <td style="background:${C.bgCard};padding:12px 16px 10px;">
+
+      <table cellpadding="0" cellspacing="0" border="0" width="100%">
+
+        <!-- ── SECTION 1: LOGO + NAME ── -->
+        <tr>
+          <td colspan="2" style="padding-bottom:10px;
+            border-bottom:1.5px solid ${C.divider};">
+
+            <table cellpadding="0" cellspacing="0" border="0"><tr>
+
+              <!-- Logo -->
+              <td style="vertical-align:middle;padding-right:14px;
+                border-right:1.5px solid ${C.divider};">
+                <img src="data:image/png;base64,${LOGO}"
+                  width="115" alt="Surface Paints Pvt. Ltd."
+                  style="display:block;border:0;outline:none;max-width:115px;">
+              </td>
+
+              <!-- Name block -->
+              <td style="vertical-align:middle;padding-left:14px;">
+                <div style="font-size:18px;font-weight:900;color:${C.dark};
+                  letter-spacing:-0.3px;line-height:1.1;">${name}</div>
+                <div style="font-size:12px;font-weight:700;color:${C.orange};
+                  letter-spacing:0.3px;margin-top:3px;">${desig}</div>
+                ${deptBadge}
+                <div style="font-size:9px;color:${C.muted};
+                  margin-top:5px;letter-spacing:0.4px;">${CO.tagline}</div>
+              </td>
+
+            </tr></table>
+          </td>
+        </tr>
+
+        <!-- ── SECTION 2: CONTACT DETAILS ── -->
+        <tr>
+          <td colspan="2" style="padding-top:9px;padding-bottom:7px;
+            border-bottom:1px solid ${C.divider};">
+
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tr>
+                <!-- FULL WIDTH: contact rows -->
+                <td style="vertical-align:top;width:100%;">
+                  <table cellpadding="0" cellspacing="0" border="0">
+                    ${contactRow("mobile", `<a href="tel:${phone.replace(/\s/g,"")}" style="color:${C.mid};text-decoration:none;">${phone}</a>`)}
+                    ${phone2Row}
+                    ${waRow}
+                    ${contactRow("mail", `<a href="mailto:${email}" style="color:${C.orange};text-decoration:none;">${email}</a>`)}
+                    ${contactRow("web",  `<a href="https://${CO.website}" style="color:${C.orange};text-decoration:none;">${CO.website}</a>`)}
+                    ${liRow}
+                    ${contactRow("pin",  `<span style="color:${C.muted};line-height:1.4;">${CO.address1} ${CO.address2}</span>`)}
+                  </table>
+                </td>
+              </tr>
+
+              ${taglineRow}
+
+            </table>
+          </td>
+        </tr>
+
+        <!-- ── SECTION 3: STATS (full only) ── -->
+        ${statsBlock}
+
+      </table>
+    </td>
+  </tr>
+
+</table>
+<!--[/SURFACE PAINTS · EMAIL SIGNATURE]-->`.trim();
+}
+
+// ═══════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════
+function getVals() {
+  return {
+    name    : document.getElementById("f-name").value.trim()    || "Your Name",
+    desig   : document.getElementById("f-desig").value.trim()   || "Designation",
+    dept    : document.getElementById("f-dept").value.trim(),
+    tagline : document.getElementById("f-tagline").value.trim(),
+    phone   : document.getElementById("f-phone").value.trim()   || "+91 00000 00000",
+    phone2  : document.getElementById("f-phone2").value.trim(),
+    email   : document.getElementById("f-email").value.trim()   || "email@surfacepaints.com",
+    linkedin: document.getElementById("f-linkedin").value.trim(),
+    wa      : document.getElementById("f-wa").value.trim(),
+    style   : document.getElementById("f-style").value,
+  };
+}
+
+function render() {
+  const v = getVals();
+  document.getElementById("mock-meta").innerHTML =
+    `<strong>From:</strong> ${v.name} &lt;${v.email}&gt; &nbsp;·&nbsp;
+     <strong>To:</strong> client@example.com &nbsp;·&nbsp;
+     <strong>Subject:</strong> Project Inquiry – Surface Paints`;
+  document.getElementById("sig-preview").innerHTML =
+    buildSig(v.name,v.desig,v.dept,v.tagline,v.phone,v.phone2,v.email,v.linkedin,v.wa,v.style);
+}
+
+async function copySig() {
+  const v = getVals();
+  const html = buildSig(v.name,v.desig,v.dept,v.tagline,v.phone,v.phone2,v.email,v.linkedin,v.wa,v.style);
+  try {
+    await navigator.clipboard.write([
+      new ClipboardItem({ "text/html": new Blob([html], { type:"text/html" }) })
+    ]);
+  } catch {
+    await navigator.clipboard.writeText(html);
+  }
+  const t = document.getElementById("toast");
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2800);
+}
+
+// Wire inputs
+["f-name","f-desig","f-dept","f-tagline","f-phone","f-phone2",
+ "f-email","f-linkedin","f-wa","f-style"].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener("input",  render);
+  el.addEventListener("change", render);
+});
+
+render();
+</script>
+</body>
+</html>
