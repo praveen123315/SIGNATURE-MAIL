@@ -313,13 +313,13 @@ const CO = {
     { val:"62+",       lbl:"Years of Legacy"   },
     { val:"16+",       lbl:"Countries"         },
     { val:"9,196 MT",  lbl:"Annual Capacity"   },
-    { val:"₹1016 Cr+", lbl:"Large Taxpayer Unit"},
+    { val:"₹1016 Cr+", lbl:"Life Time Revenue"},
     { val:"95685 mt/kl",lbl:"Coatings Delivered"},
     { val:"3 ISI",     lbl:"Certificates"      },
     { val:"6 BIS",     lbl:"Licences"          },
   ],
-  products: ["Powder Coatings","Epoxy Paints","PU Paints","Enamels","Hammer Tex Finishes","Kniffing Putty","Alkyd Resins","Speciality Coatings"],
-  taglineFooter: "Powder &amp; Industrial Liquid Paint Manufacturer",
+  products: ["Powder Coatings","Epoxy Paints","PU Paints","Enamels","Speciality Coatings"],
+  taglineFooter: "",
 };
 
 // ═══════════════════════════════════════════════
@@ -411,19 +411,12 @@ function buildSig(name, desig, dept, tagline, phone, phone2, email, linkedin, wa
     <!-- PRODUCTS LINE -->
     <tr><td colspan="2" style="padding-bottom:6px;">
       <div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;
-        color:${C.muted};letter-spacing:0.2px;line-height:1.5;">
-        <span style="color:${C.orange};font-weight:700;">Products:</span> ${CO.products.join(" · ")}
+        color:#1a1a1a;font-weight:700;letter-spacing:0.2px;line-height:1.5;">
+        <span style="color:#1a1a1a;font-weight:700;">Products:</span> <strong style="color:#1a1a1a;">${CO.products.join(" · ")}</strong>
       </div>
     </td></tr>
 
-    <!-- FOOTER TAGLINE -->
-    <tr><td colspan="2">
-      <div style="font-family:Arial,Helvetica,sans-serif;font-size:9.5px;
-        color:${C.muted};border-top:1px solid ${C.divider};
-        padding-top:6px;letter-spacing:0.2px;line-height:1.5;">
-        ${CO.taglineFooter}
-      </div>
-    </td></tr>
+
   ` : "";
 
   // ── Assemble ──
@@ -465,7 +458,7 @@ function buildSig(name, desig, dept, tagline, phone, phone2, email, linkedin, wa
                 <div style="font-size:12px;font-weight:700;color:${C.orange};
                   letter-spacing:0.3px;margin-top:3px;">${desig}</div>
                 ${deptBadge}
-                <div style="font-size:9px;color:${C.muted};
+                <div style="font-size:9px;color:#1a1a1a;font-weight:700;
                   margin-top:5px;letter-spacing:0.4px;">${CO.tagline}</div>
               </td>
 
@@ -489,7 +482,7 @@ function buildSig(name, desig, dept, tagline, phone, phone2, email, linkedin, wa
                     ${contactRow("mail", `<a href="mailto:${email}" style="color:${C.orange};text-decoration:none;">${email}</a>`)}
                     ${contactRow("web",  `<a href="https://${CO.website}" style="color:${C.orange};text-decoration:none;">${CO.website}</a>`)}
                     ${liRow}
-                    ${contactRow("pin",  `<span style="color:${C.muted};line-height:1.4;">${CO.address1} ${CO.address2}</span>`)}
+                    ${contactRow("pin",  `<span style="color:${C.muted};line-height:1.4;font-weight:700;">${CO.address1} ${CO.address2}</span>`)}
                   </table>
                 </td>
               </tr>
