@@ -3,40 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Surface Paints Email Signatures</title>
+<title>Surface Paints Signature Generator</title>
 <link rel="icon" href="images/logo.png">
 <style>
   :root {
-    --ink: #141414; --muted: #5F6672; --line: #E6E8EC; --bg: #F4F5F7; --card: #FFFFFF;
-    --navy: #293797; --orange: #F68029;
+    --ink: #141414; --muted: #5F6672; --faint: #8A919C; --line: #E3E6EB; --bg: #F3F4F6; --card: #FFFFFF;
+    --navy: #293797; --orange: #F68029; --green: #01A653; --red: #ED252C;
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink);
          font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
   .strip { height: 6px; background: linear-gradient(90deg,#293797,#678CCA,#01A653,#C9DF81,#F68029,#ED252C); }
-  header { max-width: 980px; margin: 0 auto; padding: 36px 20px 8px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
-  header img { width: 150px; height: auto; display: block; }
-  header h1 { margin: 0; font-size: 26px; letter-spacing: -0.4px; }
-  header p { margin: 6px 0 0; color: var(--muted); font-size: 14px; line-height: 1.5; max-width: 60ch; }
-  main { max-width: 980px; margin: 0 auto; padding: 20px 20px 60px; display: grid; gap: 22px; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
-  .card-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap;
-               padding: 20px 24px 16px; border-bottom: 1px solid var(--line); }
-  .num { margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); }
-  .card-head h2 { margin: 4px 0 0; font-size: 20px; letter-spacing: -0.2px; }
-  .blurb { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
-  .actions { display: flex; gap: 8px; }
-  .btn { font: inherit; font-size: 13px; font-weight: 700; border-radius: 9px; padding: 10px 16px; cursor: pointer;
-         background: var(--ink); color: #fff; border: 1px solid var(--ink); text-decoration: none; }
+  header { max-width: 1180px; margin: 0 auto; padding: 28px 20px 4px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  header img { width: 150px; height: auto; display: block; background: #fff; border-radius: 12px; padding: 8px 10px; border: 1px solid var(--line); }
+  header h1 { margin: 0; font-size: 24px; letter-spacing: -0.4px; }
+  header p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+  .layout { max-width: 1180px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 20px; align-items: start; }
+  @media (max-width: 920px) { .layout { grid-template-columns: 1fr; } }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; min-width: 0; }
+  .panel h2 { margin: 0 0 4px; font-size: 16px; }
+  .panel .sub { margin: 0 0 18px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  label { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .3px; }
+  label .req { color: var(--red); }
+  input[type=text], input[type=email], input[type=tel], input[type=url] {
+    font: inherit; font-size: 14px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px;
+    background: #fff; color: var(--ink); width: 100%; }
+  input:focus { outline: 2px solid var(--navy); outline-offset: 1px; border-color: transparent; }
+  .hint { font-size: 12px; color: var(--faint); line-height: 1.45; }
+  .err { font-size: 12px; color: var(--red); display: none; }
+  .field.bad .err { display: block; }
+  .field.bad input { border-color: var(--red); }
+  .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: var(--bg); padding: 4px; border-radius: 10px; }
+  .seg button { font: inherit; font-size: 12.5px; font-weight: 700; padding: 8px 4px; border: 0; border-radius: 7px;
+                background: transparent; color: var(--muted); cursor: pointer; }
+  .seg button[aria-pressed=true] { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .photo-row { display: flex; gap: 12px; align-items: center; margin-top: 10px; }
+  .photo-row img { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; border: 1px solid var(--line); background: #fff; }
+  .file-btn { font: inherit; font-size: 13px; font-weight: 700; padding: 9px 14px; border-radius: 9px; border: 1px solid var(--line);
+              background: #fff; cursor: pointer; }
+  .fixed { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+  .fixed b { color: var(--ink); }
+  .preview-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .preview-head h2 { margin: 0; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn { font: inherit; font-size: 13.5px; font-weight: 700; border-radius: 10px; padding: 11px 18px; cursor: pointer;
+         background: var(--ink); color: #fff; border: 1px solid var(--ink); }
   .btn:hover { opacity: .88; }
   .btn.ghost { background: #fff; color: var(--ink); border-color: var(--line); }
-  .btn.done { background: #01A653; border-color: #01A653; }
-  .canvas { padding: 32px 24px; overflow-x: auto; background: #fff; }
-  .canvas-soft { background: #EEF1F5; }
+  .btn.done { background: var(--green); border-color: var(--green); }
+  .btn:focus-visible, .seg button:focus-visible, .file-btn:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+  .canvas { background: #fff; border: 1px dashed var(--line); border-radius: 12px; padding: 28px 22px; overflow-x: auto; }
   .sig { display: inline-block; }
-  .help { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px 24px; font-size: 14px; line-height: 1.6; }
-  .help h3 { margin: 0 0 8px; font-size: 16px; }
-  .help ol { margin: 0; padding-left: 20px; }
+  .warn { margin-top: 12px; font-size: 12.5px; color: #8A5A00; background: #FFF6E5; border: 1px solid #F4DDAE;
+          border-radius: 10px; padding: 10px 12px; line-height: 1.5; display: none; }
+  .steps { margin-top: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .step { background: var(--bg); border-radius: 12px; padding: 14px 16px; font-size: 13px; line-height: 1.55; color: var(--muted); }
+  .step b { color: var(--ink); display: block; margin-bottom: 2px; font-size: 13px; }
+  footer { max-width: 1180px; margin: 0 auto; padding: 4px 20px 40px; font-size: 12.5px; color: var(--faint); }
+  footer a { color: var(--navy); }
   .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: #fff;
            padding: 12px 18px; border-radius: 10px; font-size: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; }
   .toast.show { opacity: 1; }
@@ -47,261 +72,261 @@
 <header>
   <img src="images/logo.png" alt="Surface Paints Pvt. Ltd.">
   <div>
-    <h1>Email Signatures</h1>
-    <p>Managing Director Suyash Singhal ke liye 6 animated designs. Jo pasand aaye, "Copy signature" dabayein aur Gmail ya Outlook ki signature setting me paste kar dein.</p>
+    <h1>Email Signature Generator</h1>
+    <p>Apni details bharein, signature turant ban jayega. Copy karke Gmail ya Outlook me paste kar dein.</p>
   </div>
 </header>
-<main>
 
-<section class="card">
-  <div class="card-head">
-    <div>
-      <p class="num">Design 01</p>
-      <h2>Bloom</h2>
-      <p class="blurb">Logo ke petals ek-ek karke khilte hain, phir naam ubhar kar aata hai.</p>
+<div class="layout">
+  <form class="panel" id="form" novalidate>
+    <h2>Aapki details</h2>
+    <p class="sub">Sirf ye 4 cheezein aur photo. Baaki sab (logo, address, company numbers, social links) apne aap aa jata hai.</p>
+
+    <div class="field" id="f-name">
+      <label for="name">Full name <span class="req">*</span></label>
+      <input type="text" id="name" autocomplete="name" placeholder="e.g. Rahul Verma">
+      <span class="err">Apna naam likhein.</span>
     </div>
-    <div class="actions">
-      <a class="btn ghost" href="signatures/01-bloom.html" target="_blank" rel="noopener">Open</a>
-      <button class="btn" type="button" data-copy="sig-1">Copy signature</button>
+    <div class="field" id="f-title">
+      <label for="title">Designation <span class="req">*</span></label>
+      <input type="text" id="title" autocomplete="organization-title" placeholder="e.g. Sales Manager">
+      <span class="err">Apna designation likhein.</span>
     </div>
-  </div>
-  <div class="canvas">
-    <div class="sig" id="sig-1"><table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;"><tr><td><table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
-<tr>
-<td valign="middle" style="padding:0 24px 0 0;"><a href="https://www.surfacepaints.com/"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/d1-bloom.gif" width="200" height="108" alt="Surface Paints Pvt. Ltd." data-x="d1-bloom" style="display:block;border:0;outline:none;width:200px;height:108px;"></a></td>
-<td valign="middle" style="padding:2px 0 2px 22px;border-left:1px solid #E6E8EC;">
-<div style="font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:30px;color:#141414;letter-spacing:-0.3px;">Suyash Singhal</div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10.5px;line-height:16px;letter-spacing:2.6px;text-transform:uppercase;font-weight:bold;color:#F68029;padding-top:5px;">Managing Director</div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;color:#5F6672;">Surface Paints Pvt. Ltd.</div>
-<div style="height:12px;line-height:12px;font-size:1px;">&nbsp;</div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;line-height:21px;color:#141414;">
-<span style="color:#01A653;font-weight:bold;">M</span>&nbsp;&nbsp;<a href="tel:+919919112867" style="color:#141414;text-decoration:none;">+91 99191 12867</a>&nbsp;&nbsp;&nbsp;<span style="color:#D0D4DA;">|</span>&nbsp;&nbsp;&nbsp;<span style="color:#F68029;font-weight:bold;">E</span>&nbsp;&nbsp;<a href="mailto:suyash@surfacepaints.com" style="color:#141414;text-decoration:none;">suyash@surfacepaints.com</a><br>
-<span style="color:#ED252C;font-weight:bold;">W</span>&nbsp;&nbsp;<a href="https://www.surfacepaints.com/" style="color:#141414;text-decoration:none;">www.surfacepaints.com</a>
+    <div class="field" id="f-phone">
+      <label for="phone">Mobile number <span class="req">*</span></label>
+      <input type="tel" id="phone" autocomplete="tel" placeholder="e.g. 98765 43210">
+      <span class="err">10 digit ka mobile number likhein.</span>
+    </div>
+    <div class="field" id="f-email">
+      <label for="email">Email <span class="req">*</span></label>
+      <input type="email" id="email" autocomplete="email" placeholder="e.g. rahul@surfacepaints.com">
+      <span class="err">Sahi email likhein (jaise naam@surfacepaints.com).</span>
+    </div>
+
+    <div class="field">
+      <label id="photo-label">Photo</label>
+      <div class="seg" role="group" aria-labelledby="photo-label">
+        <button type="button" data-mode="none" aria-pressed="true">Logo tile</button>
+        <button type="button" data-mode="upload" aria-pressed="false">Upload</button>
+        <button type="button" data-mode="url" aria-pressed="false">Photo link</button>
+      </div>
+      <div id="mode-upload" hidden>
+        <div class="photo-row">
+          <img id="thumb" alt="">
+          <label class="file-btn" for="file">Photo chunein</label>
+          <input type="file" id="file" accept="image/*" hidden>
+        </div>
+        <p class="hint">Photo apne aap square kat kar chhoti ho jayegi. Outlook aur Apple Mail me seedha kaam karegi. Gmail ke liye "Photo link" use karein.</p>
+      </div>
+      <div id="mode-url" hidden>
+        <input type="url" id="photourl" placeholder="https://..." style="margin-top:10px">
+        <p class="hint">Photo ka public link (https se shuru). Gmail me photo ke liye yahi tarika kaam karta hai.</p>
+      </div>
+      <p class="hint" id="mode-none-hint">Photo nahi hai to company ka logo tile dikhega.</p>
+    </div>
+
+    <div class="fixed">
+      <b>Fixed (sab employees ke liye same):</b><br>
+      Surface Paints logo animation, office address, company numbers, products, website, aur company ke LinkedIn, Facebook, Instagram.
+    </div>
+  </form>
+
+  <section class="panel">
+    <div class="preview-head">
+      <h2>Live preview</h2>
+      <div class="actions">
+        <button class="btn ghost" type="button" id="copy-code">Copy HTML code</button>
+        <button class="btn" type="button" id="copy">Copy signature</button>
+      </div>
+    </div>
+    <div class="canvas"><div class="sig" id="sig"></div></div>
+    <div class="warn" id="warn"></div>
+    <div class="steps">
+      <div class="step"><b>Gmail</b>Settings &rarr; See all settings &rarr; General &rarr; Signature &rarr; Create new &rarr; Ctrl+V &rarr; neeche Save Changes.</div>
+      <div class="step"><b>Outlook</b>File &rarr; Options &rarr; Mail &rarr; Signatures &rarr; New &rarr; Ctrl+V &rarr; OK.</div>
+      <div class="step"><b>Outlook web / Others</b>Agar paste se design na aaye, to "Copy HTML code" use karke HTML signature box me daalein.</div>
+    </div>
+  </section>
 </div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;line-height:16px;color:#9AA1AC;padding-top:6px;">15th Kilometer, Lucknow&ndash;Sitapur Road, Village Navi Kot Nandana,<br>Bakshi Ka Talab, Lucknow &ndash; 226201, Uttar Pradesh, India</div>
-<div style="height:12px;line-height:12px;font-size:1px;">&nbsp;</div>
-<table cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#0A66C2" style="width:24px;height:24px;background:#0A66C2;border-radius:6px;"><a href="https://in.linkedin.com/in/suyash-singhal-842597125" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">in</a></td></tr></table></td><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#1877F2" style="width:24px;height:24px;background:#1877F2;border-radius:6px;"><a href="https://www.facebook.com/SurfacePaints" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">f</a></td></tr></table></td><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#E1306C" style="width:24px;height:24px;background:#E1306C;border-radius:6px;"><a href="https://www.instagram.com/imsuyashsinghal/reels/" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">ig</a></td></tr></table></td></tr></table>
-</td>
-</tr>
-</table></td></tr><tr><td style="padding-top:20px;"><table cellpadding="0" cellspacing="0" border="0" width="560" style="width:560px;border-collapse:collapse;"><tr><td width="76" align="center" valign="top" style="width:76px;border-top:3px solid #293797;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">3,000+</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Clients</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="76" align="center" valign="top" style="width:76px;border-top:3px solid #678CCA;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">62</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Years of Legacy</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="76" align="center" valign="top" style="width:76px;border-top:3px solid #01A653;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">16</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Countries</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="76" align="center" valign="top" style="width:76px;border-top:3px solid #C9DF81;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">9,196</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">MT Annual Capacity</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="76" align="center" valign="top" style="width:76px;border-top:3px solid #F68029;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">95,685</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">MT/KL Coatings Delivered</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="76" align="center" valign="top" style="width:76px;border-top:3px solid #ED252C;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">3</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">ISO Certificates</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="76" align="center" valign="top" style="width:76px;border-top:3px solid #B81D24;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">7</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">BIS Licences</div></td></tr></table><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11.5px;line-height:17px;color:#141414;padding-top:12px;width:560px;"><b style="color:#141414;">Products:</b>&nbsp; <span style="white-space:nowrap;">Powder Coatings</span><span style="color:#01A653;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Epoxy Paints</span><span style="color:#F68029;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">PU Paints</span><span style="color:#B81D24;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Enamels</span><span style="color:#678CCA;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Speciality Coatings</span></div></td></tr></table></div>
-  </div>
-</section>
-<section class="card">
-  <div class="card-head">
-    <div>
-      <p class="num">Design 02</p>
-      <h2>Midnight</h2>
-      <p class="blurb">Dark premium card. Photo ke chaaron taraf brand colours ka ring ghoomta hai.</p>
-    </div>
-    <div class="actions">
-      <a class="btn ghost" href="signatures/02-midnight.html" target="_blank" rel="noopener">Open</a>
-      <button class="btn" type="button" data-copy="sig-2">Copy signature</button>
-    </div>
-  </div>
-  <div class="canvas canvas-soft">
-    <div class="sig" id="sig-2"><table cellpadding="0" cellspacing="0" border="0" width="560" bgcolor="#0E1A2B" style="width:560px;background:#0E1A2B;border-radius:18px;border-collapse:separate;">
-<tr><td style="padding:26px 28px 22px 28px;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
-<td width="104" valign="middle" style="width:104px;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/d2-ring-md.gif" width="104" height="104" alt="Suyash Singhal" data-x="d2-ring-md" style="display:block;border:0;outline:none;width:104px;height:104px;"></td>
-<td valign="middle" style="padding-left:22px;">
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:23px;line-height:28px;font-weight:bold;color:#FFFFFF;letter-spacing:-0.2px;">Suyash Singhal</div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10.5px;line-height:16px;letter-spacing:2.6px;text-transform:uppercase;font-weight:bold;color:#F68029;padding-top:6px;">Managing Director</div>
-<div style="height:12px;line-height:12px;font-size:1px;">&nbsp;</div>
-<table cellpadding="0" cellspacing="0" border="0"><tr><td width="16" valign="middle" style="padding:3px 0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-dark-phone.png" width="16" height="16" alt="" style="display:block;border:0;outline:none;width:16px;height:16px;"></td><td valign="middle" style="padding:3px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;line-height:18px;color:#D3DBE7;"><a href="tel:+919919112867" style="color:#D3DBE7;text-decoration:none;">+91 99191 12867</a></td></tr><tr><td width="16" valign="middle" style="padding:3px 0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-dark-mail.png" width="16" height="16" alt="" style="display:block;border:0;outline:none;width:16px;height:16px;"></td><td valign="middle" style="padding:3px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;line-height:18px;color:#D3DBE7;"><a href="mailto:suyash@surfacepaints.com" style="color:#D3DBE7;text-decoration:none;">suyash@surfacepaints.com</a></td></tr><tr><td width="16" valign="middle" style="padding:3px 0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-dark-web.png" width="16" height="16" alt="" style="display:block;border:0;outline:none;width:16px;height:16px;"></td><td valign="middle" style="padding:3px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;line-height:18px;color:#D3DBE7;"><a href="https://www.surfacepaints.com/" style="color:#D3DBE7;text-decoration:none;">www.surfacepaints.com</a></td></tr></table>
-</td></tr></table>
-</td></tr>
-<tr><td style="padding:0 28px;"><div style="height:1px;line-height:1px;font-size:1px;background:#22324A;">&nbsp;</div></td></tr>
-<tr><td style="padding:16px 28px 22px 28px;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
-<td valign="middle"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/logo-white.png" width="122" alt="Surface Paints Pvt. Ltd." style="display:block;border:0;outline:none;width:122px;height:auto;"></td>
-<td valign="middle" align="right"><table cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#1D2C44" style="width:24px;height:24px;background:#1D2C44;border-radius:6px;"><a href="https://in.linkedin.com/in/suyash-singhal-842597125" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">in</a></td></tr></table></td><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#1D2C44" style="width:24px;height:24px;background:#1D2C44;border-radius:6px;"><a href="https://www.facebook.com/SurfacePaints" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">f</a></td></tr></table></td><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#1D2C44" style="width:24px;height:24px;background:#1D2C44;border-radius:6px;"><a href="https://www.instagram.com/imsuyashsinghal/reels/" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">ig</a></td></tr></table></td></tr></table></td>
-</tr>
-<tr><td colspan="2" style="padding-top:12px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;line-height:16px;color:#7D8BA1;">15th Kilometer, Lucknow&ndash;Sitapur Road, Village Navi Kot Nandana, Bakshi Ka Talab, Lucknow &ndash; 226201, Uttar Pradesh, India</td></tr>
-</table>
-</td></tr>
-<tr><td style="padding:2px 28px 26px 28px;"><table cellpadding="0" cellspacing="0" border="0" width="504" style="width:504px;border-collapse:collapse;"><tr><td width="68" align="center" valign="top" style="width:68px;border-top:3px solid #293797;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#FFFFFF;white-space:nowrap;">3,000+</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#8A97AB;padding-top:3px;">Clients</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="68" align="center" valign="top" style="width:68px;border-top:3px solid #678CCA;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#FFFFFF;white-space:nowrap;">62</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#8A97AB;padding-top:3px;">Years of Legacy</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="68" align="center" valign="top" style="width:68px;border-top:3px solid #01A653;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#FFFFFF;white-space:nowrap;">16</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#8A97AB;padding-top:3px;">Countries</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="68" align="center" valign="top" style="width:68px;border-top:3px solid #C9DF81;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#FFFFFF;white-space:nowrap;">9,196</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#8A97AB;padding-top:3px;">MT Annual Capacity</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="68" align="center" valign="top" style="width:68px;border-top:3px solid #F68029;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#FFFFFF;white-space:nowrap;">95,685</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#8A97AB;padding-top:3px;">MT/KL Coatings Delivered</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="68" align="center" valign="top" style="width:68px;border-top:3px solid #ED252C;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#FFFFFF;white-space:nowrap;">3</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#8A97AB;padding-top:3px;">ISO Certificates</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="68" align="center" valign="top" style="width:68px;border-top:3px solid #B81D24;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#FFFFFF;white-space:nowrap;">7</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#8A97AB;padding-top:3px;">BIS Licences</div></td></tr></table><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11.5px;line-height:17px;color:#C9D3E1;padding-top:12px;width:504px;"><b style="color:#FFFFFF;">Products:</b>&nbsp; <span style="white-space:nowrap;">Powder Coatings</span><span style="color:#01A653;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Epoxy Paints</span><span style="color:#F68029;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">PU Paints</span><span style="color:#B81D24;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Enamels</span><span style="color:#678CCA;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Speciality Coatings</span></div></td></tr>
-</table></div>
-  </div>
-</section>
-<section class="card">
-  <div class="card-head">
-    <div>
-      <p class="num">Design 03</p>
-      <h2>Paint Stroke</h2>
-      <p class="blurb">Paint brush stroke banner, website link ke saath.</p>
-    </div>
-    <div class="actions">
-      <a class="btn ghost" href="signatures/03-paint-stroke.html" target="_blank" rel="noopener">Open</a>
-      <button class="btn" type="button" data-copy="sig-3">Copy signature</button>
-    </div>
-  </div>
-  <div class="canvas">
-    <div class="sig" id="sig-3"><table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;"><tr><td><table cellpadding="0" cellspacing="0" border="0" width="520" style="width:520px;border-collapse:collapse;">
-<tr><td>
-<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
-<td width="150" valign="middle" style="width:150px;padding:0 22px 0 0;"><a href="https://www.surfacepaints.com/"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/logo.png" width="150" alt="Surface Paints Pvt. Ltd." style="display:block;border:0;outline:none;width:150px;height:auto;"></a></td>
-<td width="1" bgcolor="#E6E8EC" style="width:1px;background:#E6E8EC;font-size:1px;line-height:1px;">&nbsp;</td>
-<td valign="middle" style="padding:0 0 0 22px;">
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:21px;line-height:26px;font-weight:bold;color:#141414;letter-spacing:-0.2px;">Suyash Singhal</div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;line-height:18px;font-weight:bold;color:#293797;padding-top:2px;">Managing Director</div>
-<div style="height:10px;line-height:10px;font-size:1px;">&nbsp;</div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;line-height:20px;color:#141414;">
-<span style="color:#ED252C;font-weight:bold;">M&nbsp;</span> <a href="tel:+919919112867" style="color:#141414;text-decoration:none;">+91 99191 12867</a><br>
-<span style="color:#ED252C;font-weight:bold;">E&nbsp;</span> <a href="mailto:suyash@surfacepaints.com" style="color:#141414;text-decoration:none;">suyash@surfacepaints.com</a><br>
-<span style="color:#ED252C;font-weight:bold;">W&nbsp;</span> <a href="https://www.surfacepaints.com/" style="color:#141414;text-decoration:none;">www.surfacepaints.com</a>
-</div>
-</td></tr></table>
-</td></tr>
-<tr><td style="padding-top:16px;"><a href="https://www.surfacepaints.com/"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/d3-stroke-banner.gif" width="520" height="84" alt="www.surfacepaints.com" data-x="d3-stroke-banner" style="display:block;border:0;outline:none;width:520px;height:84px;"></a></td></tr>
-<tr><td style="padding-top:8px;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
-<td valign="middle" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;line-height:16px;color:#9AA1AC;">15th Kilometer, Lucknow&ndash;Sitapur Road, Village Navi Kot Nandana,<br>Bakshi Ka Talab, Lucknow &ndash; 226201, Uttar Pradesh, India</td>
-<td valign="middle" align="right" width="96"><table cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#0A66C2" style="width:24px;height:24px;background:#0A66C2;border-radius:6px;"><a href="https://in.linkedin.com/in/suyash-singhal-842597125" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">in</a></td></tr></table></td><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#1877F2" style="width:24px;height:24px;background:#1877F2;border-radius:6px;"><a href="https://www.facebook.com/SurfacePaints" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">f</a></td></tr></table></td><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#E1306C" style="width:24px;height:24px;background:#E1306C;border-radius:6px;"><a href="https://www.instagram.com/imsuyashsinghal/reels/" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">ig</a></td></tr></table></td></tr></table></td>
-</tr></table>
-</td></tr>
-</table></td></tr><tr><td style="padding-top:20px;"><table cellpadding="0" cellspacing="0" border="0" width="520" style="width:520px;border-collapse:collapse;"><tr><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #293797;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">3,000+</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Clients</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #678CCA;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">62</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Years of Legacy</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #01A653;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">16</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Countries</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #C9DF81;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">9,196</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">MT Annual Capacity</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #F68029;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">95,685</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">MT/KL Coatings Delivered</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #ED252C;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">3</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">ISO Certificates</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #B81D24;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">7</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">BIS Licences</div></td></tr></table><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11.5px;line-height:17px;color:#141414;padding-top:12px;width:520px;"><b style="color:#141414;">Products:</b>&nbsp; <span style="white-space:nowrap;">Powder Coatings</span><span style="color:#01A653;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Epoxy Paints</span><span style="color:#F68029;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">PU Paints</span><span style="color:#B81D24;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Enamels</span><span style="color:#678CCA;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Speciality Coatings</span></div></td></tr></table></div>
-  </div>
-</section>
-<section class="card">
-  <div class="card-head">
-    <div>
-      <p class="num">Design 04</p>
-      <h2>Spectrum</h2>
-      <p class="blurb">Side me bahti colour patti, bold capitals me naam.</p>
-    </div>
-    <div class="actions">
-      <a class="btn ghost" href="signatures/04-spectrum.html" target="_blank" rel="noopener">Open</a>
-      <button class="btn" type="button" data-copy="sig-4">Copy signature</button>
-    </div>
-  </div>
-  <div class="canvas">
-    <div class="sig" id="sig-4"><table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;"><tr><td><table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
-<tr>
-<td width="100" valign="top" style="width:100px;padding:0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/md-photo-rounded.png" width="100" height="100" alt="Suyash Singhal" style="display:block;border:0;outline:none;width:100px;height:100px;">
-<div style="height:14px;line-height:14px;font-size:1px;">&nbsp;</div><a href="https://www.surfacepaints.com/"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/d1-bloom.gif" width="100" height="54" alt="Surface Paints Pvt. Ltd." data-x="d1-bloom" style="display:block;border:0;outline:none;width:100px;height:54px;"></a></td>
-<td valign="top" style="padding:0 0 0 22px;">
-<div style="font-family:'Arial Black','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:19px;line-height:24px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#141414;">Suyash Singhal</div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;line-height:18px;font-weight:bold;color:#293797;padding-top:3px;">Managing Director <span style="color:#C3C8D0;font-weight:normal;">&nbsp;|&nbsp;</span> <span style="color:#5F6672;font-weight:normal;">Surface Paints Pvt. Ltd.</span></div>
-<div style="height:12px;line-height:12px;font-size:1px;">&nbsp;</div>
-<table cellpadding="0" cellspacing="0" border="0"><tr><td width="20" valign="middle" style="padding:3px 0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-navy-phone.png" width="20" height="20" alt="" style="display:block;border:0;outline:none;width:20px;height:20px;"></td><td valign="middle" style="padding:3px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#141414;"><a href="tel:+919919112867" style="color:#141414;text-decoration:none;">+91 99191 12867</a></td></tr><tr><td width="20" valign="middle" style="padding:3px 0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-navy-mail.png" width="20" height="20" alt="" style="display:block;border:0;outline:none;width:20px;height:20px;"></td><td valign="middle" style="padding:3px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#141414;"><a href="mailto:suyash@surfacepaints.com" style="color:#141414;text-decoration:none;">suyash@surfacepaints.com</a></td></tr><tr><td width="20" valign="middle" style="padding:3px 0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-navy-web.png" width="20" height="20" alt="" style="display:block;border:0;outline:none;width:20px;height:20px;"></td><td valign="middle" style="padding:3px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#141414;"><a href="https://www.surfacepaints.com/" style="color:#141414;text-decoration:none;">www.surfacepaints.com</a></td></tr></table>
-<table cellpadding="0" cellspacing="0" border="0"><tr>
-<td width="20" valign="top" style="padding:3px 0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-navy-pin.png" width="20" height="20" alt="" style="display:block;border:0;outline:none;width:20px;height:20px;"></td>
-<td valign="top" style="padding:4px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;line-height:16px;color:#5F6672;">15th Kilometer, Lucknow&ndash;Sitapur Road, Village Navi Kot Nandana,<br>Bakshi Ka Talab, Lucknow &ndash; 226201, Uttar Pradesh, India</td>
-</tr></table>
-<div style="height:10px;line-height:10px;font-size:1px;">&nbsp;</div>
-<table cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#0A66C2" style="width:24px;height:24px;background:#0A66C2;border-radius:12px;"><a href="https://in.linkedin.com/in/suyash-singhal-842597125" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">in</a></td></tr></table></td><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#1877F2" style="width:24px;height:24px;background:#1877F2;border-radius:12px;"><a href="https://www.facebook.com/SurfacePaints" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">f</a></td></tr></table></td><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#E1306C" style="width:24px;height:24px;background:#E1306C;border-radius:12px;"><a href="https://www.instagram.com/imsuyashsinghal/reels/" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">ig</a></td></tr></table></td></tr></table>
-</td>
-</tr>
-</table></td></tr><tr><td style="padding-top:20px;"><table cellpadding="0" cellspacing="0" border="0" width="520" style="width:520px;border-collapse:collapse;"><tr><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #293797;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">3,000+</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Clients</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #678CCA;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">62</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Years of Legacy</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #01A653;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">16</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Countries</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #C9DF81;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">9,196</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">MT Annual Capacity</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #F68029;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">95,685</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">MT/KL Coatings Delivered</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #ED252C;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">3</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">ISO Certificates</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="70" align="center" valign="top" style="width:70px;border-top:3px solid #B81D24;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">7</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">BIS Licences</div></td></tr></table><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11.5px;line-height:17px;color:#141414;padding-top:12px;width:520px;"><b style="color:#141414;">Products:</b>&nbsp; <span style="white-space:nowrap;">Powder Coatings</span><span style="color:#01A653;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Epoxy Paints</span><span style="color:#F68029;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">PU Paints</span><span style="color:#B81D24;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Enamels</span><span style="color:#678CCA;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Speciality Coatings</span></div></td></tr></table></div>
-  </div>
-</section>
-<section class="card">
-  <div class="card-head">
-    <div>
-      <p class="num">Design 05</p>
-      <h2>Swiss Minimal</h2>
-      <p class="blurb">Minimal layout, bada naam aur uchhalte colour dots.</p>
-    </div>
-    <div class="actions">
-      <a class="btn ghost" href="signatures/05-swiss.html" target="_blank" rel="noopener">Open</a>
-      <button class="btn" type="button" data-copy="sig-5">Copy signature</button>
-    </div>
-  </div>
-  <div class="canvas">
-    <div class="sig" id="sig-5"><table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;"><tr><td><table cellpadding="0" cellspacing="0" border="0" width="540" style="width:540px;border-collapse:collapse;">
-<tr>
-<td valign="top">
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:30px;line-height:34px;font-weight:bold;letter-spacing:-0.8px;color:#141414;">Suyash Singhal</div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:19px;color:#5F6672;padding-top:4px;">Managing Director, Surface Paints Pvt. Ltd.</div>
-<div style="padding:12px 0 10px 0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/d5-dots.gif" width="150" height="22" alt="" data-x="d5-dots" style="display:block;border:0;outline:none;width:150px;height:22px;"></div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;line-height:20px;color:#141414;white-space:nowrap;"><a href="tel:+919919112867" style="color:#141414;text-decoration:none;">+91 99191 12867</a><span style="color:#C3C8D0;">&nbsp;&nbsp;/&nbsp;&nbsp;</span><a href="mailto:suyash@surfacepaints.com" style="color:#141414;text-decoration:none;">suyash@surfacepaints.com</a></div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;line-height:20px;color:#141414;white-space:nowrap;"><a href="https://www.surfacepaints.com/" style="color:#141414;text-decoration:none;">www.surfacepaints.com</a></div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;line-height:16px;color:#9AA1AC;padding-top:4px;">15th Kilometer, Lucknow&ndash;Sitapur Road, Village Navi Kot Nandana, Bakshi Ka Talab, Lucknow &ndash; 226201, Uttar Pradesh, India</div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;padding-top:10px;">
-<a href="https://in.linkedin.com/in/suyash-singhal-842597125" style="color:#141414;text-decoration:none;font-weight:bold;">LinkedIn&nbsp;&#8599;</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.facebook.com/SurfacePaints" style="color:#141414;text-decoration:none;font-weight:bold;">Facebook&nbsp;&#8599;</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.instagram.com/imsuyashsinghal/reels/" style="color:#141414;text-decoration:none;font-weight:bold;">Instagram&nbsp;&#8599;</a>
-</div>
-</td>
-<td width="120" valign="top" align="right" style="width:120px;padding-top:4px;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/logo.png" width="120" alt="Surface Paints Pvt. Ltd." style="display:block;border:0;outline:none;width:120px;height:auto;"></td>
-</tr>
-</table></td></tr><tr><td style="padding-top:20px;"><table cellpadding="0" cellspacing="0" border="0" width="540" style="width:540px;border-collapse:collapse;"><tr><td width="73" align="center" valign="top" style="width:73px;border-top:3px solid #293797;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">3,000+</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Clients</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="73" align="center" valign="top" style="width:73px;border-top:3px solid #678CCA;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">62</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Years of Legacy</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="73" align="center" valign="top" style="width:73px;border-top:3px solid #01A653;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">16</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Countries</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="73" align="center" valign="top" style="width:73px;border-top:3px solid #C9DF81;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">9,196</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">MT Annual Capacity</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="73" align="center" valign="top" style="width:73px;border-top:3px solid #F68029;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">95,685</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">MT/KL Coatings Delivered</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="73" align="center" valign="top" style="width:73px;border-top:3px solid #ED252C;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">3</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">ISO Certificates</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="73" align="center" valign="top" style="width:73px;border-top:3px solid #B81D24;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">7</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">BIS Licences</div></td></tr></table><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11.5px;line-height:17px;color:#141414;padding-top:12px;width:540px;"><b style="color:#141414;">Products:</b>&nbsp; <span style="white-space:nowrap;">Powder Coatings</span><span style="color:#01A653;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Epoxy Paints</span><span style="color:#F68029;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">PU Paints</span><span style="color:#B81D24;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Enamels</span><span style="color:#678CCA;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Speciality Coatings</span></div></td></tr></table></div>
-  </div>
-</section>
-<section class="card">
-  <div class="card-head">
-    <div>
-      <p class="num">Design 06</p>
-      <h2>Horizon</h2>
-      <p class="blurb">Brand gradient header jis par chamak guzarti hai.</p>
-    </div>
-    <div class="actions">
-      <a class="btn ghost" href="signatures/06-horizon.html" target="_blank" rel="noopener">Open</a>
-      <button class="btn" type="button" data-copy="sig-6">Copy signature</button>
-    </div>
-  </div>
-  <div class="canvas canvas-soft">
-    <div class="sig" id="sig-6"><table cellpadding="0" cellspacing="0" border="0" width="540" style="width:540px;border:1px solid #E6E8EC;border-radius:14px;border-collapse:separate;background:#FFFFFF;">
-<tr><td style="padding:0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/d6-header.gif" width="540" height="64" alt="Surface Paints" data-x="d6-header" style="display:block;border:0;outline:none;width:540px;height:64px;border-radius:13px 13px 0 0;"></td></tr>
-<tr><td style="padding:20px 24px 18px 24px;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
-<td width="88" valign="top" style="width:88px;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/md-photo-circle.png" width="88" height="88" alt="Suyash Singhal" style="display:block;border:0;outline:none;width:88px;height:88px;"></td>
-<td valign="top" style="padding-left:20px;">
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:21px;line-height:26px;font-weight:bold;color:#141414;letter-spacing:-0.2px;">Suyash Singhal</div>
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10.5px;line-height:16px;letter-spacing:2.2px;text-transform:uppercase;font-weight:bold;color:#293797;padding-top:4px;">Managing Director</div>
-<div style="height:10px;line-height:10px;font-size:1px;">&nbsp;</div>
-<table cellpadding="0" cellspacing="0" border="0"><tr><td width="20" valign="middle" style="padding:3px 0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-brand-phone.png" width="20" height="20" alt="" style="display:block;border:0;outline:none;width:20px;height:20px;"></td><td valign="middle" style="padding:3px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#141414;"><a href="tel:+919919112867" style="color:#141414;text-decoration:none;">+91 99191 12867</a></td></tr><tr><td width="20" valign="middle" style="padding:3px 0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-brand-mail.png" width="20" height="20" alt="" style="display:block;border:0;outline:none;width:20px;height:20px;"></td><td valign="middle" style="padding:3px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#141414;"><a href="mailto:suyash@surfacepaints.com" style="color:#141414;text-decoration:none;">suyash@surfacepaints.com</a></td></tr><tr><td width="20" valign="middle" style="padding:3px 0;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-brand-web.png" width="20" height="20" alt="" style="display:block;border:0;outline:none;width:20px;height:20px;"></td><td valign="middle" style="padding:3px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#141414;"><a href="https://www.surfacepaints.com/" style="color:#141414;text-decoration:none;">www.surfacepaints.com</a></td></tr></table>
-</td>
-<td valign="bottom" align="right" width="96"><table cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#0A66C2" style="width:24px;height:24px;background:#0A66C2;border-radius:12px;"><a href="https://in.linkedin.com/in/suyash-singhal-842597125" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">in</a></td></tr></table></td><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#1877F2" style="width:24px;height:24px;background:#1877F2;border-radius:12px;"><a href="https://www.facebook.com/SurfacePaints" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">f</a></td></tr></table></td><td style="padding:0 6px 0 0;"><table cellpadding="0" cellspacing="0" border="0"><tr><td width="24" height="24" align="center" valign="middle" bgcolor="#E1306C" style="width:24px;height:24px;background:#E1306C;border-radius:12px;"><a href="https://www.instagram.com/imsuyashsinghal/reels/" style="display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;">ig</a></td></tr></table></td></tr></table></td>
-</tr></table>
-</td></tr>
-<tr><td bgcolor="#F6F7F9" style="background:#F6F7F9;padding:11px 24px;border-top:1px solid #EEF0F3;border-bottom:1px solid #EEF0F3;">
-<table cellpadding="0" cellspacing="0" border="0"><tr>
-<td width="16" valign="top" style="padding-top:1px;"><img src="https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-brand-pin.png" width="16" height="16" alt="" style="display:block;border:0;outline:none;width:16px;height:16px;"></td>
-<td valign="top" style="padding-left:9px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;line-height:16px;color:#5F6672;">15th Kilometer, Lucknow&ndash;Sitapur Road, Village Navi Kot Nandana, Bakshi Ka Talab, Lucknow &ndash; 226201, Uttar Pradesh, India</td>
-</tr></table>
-</td></tr>
-<tr><td style="padding:18px 24px 20px 24px;"><table cellpadding="0" cellspacing="0" border="0" width="492" style="width:492px;border-collapse:collapse;"><tr><td width="66" align="center" valign="top" style="width:66px;border-top:3px solid #293797;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">3,000+</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Clients</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="66" align="center" valign="top" style="width:66px;border-top:3px solid #678CCA;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">62</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Years of Legacy</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="66" align="center" valign="top" style="width:66px;border-top:3px solid #01A653;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">16</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">Countries</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="66" align="center" valign="top" style="width:66px;border-top:3px solid #C9DF81;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">9,196</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">MT Annual Capacity</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="66" align="center" valign="top" style="width:66px;border-top:3px solid #F68029;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">95,685</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">MT/KL Coatings Delivered</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="66" align="center" valign="top" style="width:66px;border-top:3px solid #ED252C;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">3</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">ISO Certificates</div></td><td width="4" style="width:4px;font-size:1px;line-height:1px;">&nbsp;</td><td width="66" align="center" valign="top" style="width:66px;border-top:3px solid #B81D24;padding:9px 2px 0 2px;"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;">7</div><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;">BIS Licences</div></td></tr></table><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11.5px;line-height:17px;color:#141414;padding-top:12px;width:492px;"><b style="color:#141414;">Products:</b>&nbsp; <span style="white-space:nowrap;">Powder Coatings</span><span style="color:#01A653;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Epoxy Paints</span><span style="color:#F68029;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">PU Paints</span><span style="color:#B81D24;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Enamels</span><span style="color:#678CCA;font-weight:bold;">&nbsp;&middot;&nbsp;</span><span style="white-space:nowrap;">Speciality Coatings</span></div></td></tr>
-</table></div>
-  </div>
-</section>
-<section class="help">
-  <h3>Signature kaise lagayein</h3>
-  <ol>
-    <li>Design ke upar <b>Copy signature</b> dabayein.</li>
-    <li><b>Gmail:</b> Settings &rarr; See all settings &rarr; General &rarr; Signature &rarr; Create new &rarr; paste (Ctrl+V) &rarr; neeche Save Changes.</li>
-    <li><b>Outlook:</b> File &rarr; Options &rarr; Mail &rarr; Signatures &rarr; New &rarr; paste &rarr; OK.</li>
-  </ol>
-</section>
-</main>
-<div class="toast" id="toast">Copied. Ab signature box me paste karein.</div>
+
+<footer>
+  Managing Director ka ready signature: <a href="signatures/04-spectrum.html">Suyash Singhal</a> &middot;
+  Saare designs: <a href="designs.html">designs.html</a>
+</footer>
+<div class="toast" id="toast"></div>
+
 <script>
-  const toast = document.getElementById('toast');
-  function flash(btn, ok) {
-    btn.textContent = ok ? 'Copied!' : 'Copy failed';
-    btn.classList.toggle('done', ok);
-    if (ok) { toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2200); }
-    setTimeout(() => { btn.textContent = 'Copy signature'; btn.classList.remove('done'); }, 2200);
+const TPL = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;\"><tr><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;\">\n<tr>\n<td width=\"100\" valign=\"top\" style=\"width:100px;padding:0;\"><img src=\"{{PHOTO}}\" width=\"100\" height=\"100\" alt=\"{{NAME}}\" style=\"display:block;border:0;outline:none;width:100px;height:100px;\">\n<div style=\"height:14px;line-height:14px;font-size:1px;\">&nbsp;</div><a href=\"https://www.surfacepaints.com/\"><img src=\"https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/d1-bloom.gif\" width=\"100\" height=\"54\" alt=\"Surface Paints Pvt. Ltd.\" style=\"display:block;border:0;outline:none;width:100px;height:54px;\"></a></td>\n<td valign=\"top\" style=\"padding:0 0 0 22px;\">\n<div style=\"font-family:'Arial Black','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:19px;line-height:24px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#141414;\">{{NAME}}</div>\n<div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12.5px;line-height:18px;font-weight:bold;color:#293797;padding-top:3px;\">{{TITLE}} <span style=\"color:#C3C8D0;font-weight:normal;\">&nbsp;|&nbsp;</span> <span style=\"color:#5F6672;font-weight:normal;\">Surface Paints Pvt. Ltd.</span></div>\n<div style=\"height:12px;line-height:12px;font-size:1px;\">&nbsp;</div>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td width=\"20\" valign=\"middle\" style=\"padding:3px 0;\"><img src=\"https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-navy-phone.png\" width=\"20\" height=\"20\" alt=\"\" style=\"display:block;border:0;outline:none;width:20px;height:20px;\"></td><td valign=\"middle\" style=\"padding:3px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#141414;\"><a href=\"tel:{{TEL}}\" style=\"color:#141414;text-decoration:none;\">{{PHONE}}</a></td></tr><tr><td width=\"20\" valign=\"middle\" style=\"padding:3px 0;\"><img src=\"https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-navy-mail.png\" width=\"20\" height=\"20\" alt=\"\" style=\"display:block;border:0;outline:none;width:20px;height:20px;\"></td><td valign=\"middle\" style=\"padding:3px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#141414;\"><a href=\"mailto:{{EMAIL}}\" style=\"color:#141414;text-decoration:none;\">{{EMAIL}}</a></td></tr><tr><td width=\"20\" valign=\"middle\" style=\"padding:3px 0;\"><img src=\"https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-navy-web.png\" width=\"20\" height=\"20\" alt=\"\" style=\"display:block;border:0;outline:none;width:20px;height:20px;\"></td><td valign=\"middle\" style=\"padding:3px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#141414;\"><a href=\"https://www.surfacepaints.com/\" style=\"color:#141414;text-decoration:none;\">www.surfacepaints.com</a></td></tr></table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr>\n<td width=\"20\" valign=\"top\" style=\"padding:3px 0;\"><img src=\"https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/ic-navy-pin.png\" width=\"20\" height=\"20\" alt=\"\" style=\"display:block;border:0;outline:none;width:20px;height:20px;\"></td>\n<td valign=\"top\" style=\"padding:4px 0 3px 10px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;line-height:16px;color:#5F6672;\">15th Kilometer, Lucknow&ndash;Sitapur Road, Village Navi Kot Nandana,<br>Bakshi Ka Talab, Lucknow &ndash; 226201, Uttar Pradesh, India</td>\n</tr></table>\n<div style=\"height:10px;line-height:10px;font-size:1px;\">&nbsp;</div>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding:0 6px 0 0;\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td width=\"24\" height=\"24\" align=\"center\" valign=\"middle\" bgcolor=\"#0A66C2\" style=\"width:24px;height:24px;background:#0A66C2;border-radius:12px;\"><a href=\"https://www.linkedin.com/company/surface-paints\" style=\"display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;\">in</a></td></tr></table></td><td style=\"padding:0 6px 0 0;\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td width=\"24\" height=\"24\" align=\"center\" valign=\"middle\" bgcolor=\"#1877F2\" style=\"width:24px;height:24px;background:#1877F2;border-radius:12px;\"><a href=\"https://www.facebook.com/SurfacePaints\" style=\"display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;\">f</a></td></tr></table></td><td style=\"padding:0 6px 0 0;\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td width=\"24\" height=\"24\" align=\"center\" valign=\"middle\" bgcolor=\"#E1306C\" style=\"width:24px;height:24px;background:#E1306C;border-radius:12px;\"><a href=\"https://www.instagram.com/surfacepaints\" style=\"display:block;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;line-height:24px;color:#FFFFFF;text-decoration:none;\">ig</a></td></tr></table></td></tr></table>\n</td>\n</tr>\n</table></td></tr><tr><td style=\"padding-top:20px;\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"520\" style=\"width:520px;border-collapse:collapse;\"><tr><td width=\"70\" align=\"center\" valign=\"top\" style=\"width:70px;border-top:3px solid #293797;padding:9px 2px 0 2px;\"><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;\">3,000+</div><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;\">Clients</div></td><td width=\"4\" style=\"width:4px;font-size:1px;line-height:1px;\">&nbsp;</td><td width=\"70\" align=\"center\" valign=\"top\" style=\"width:70px;border-top:3px solid #678CCA;padding:9px 2px 0 2px;\"><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;\">62</div><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;\">Years of Legacy</div></td><td width=\"4\" style=\"width:4px;font-size:1px;line-height:1px;\">&nbsp;</td><td width=\"70\" align=\"center\" valign=\"top\" style=\"width:70px;border-top:3px solid #01A653;padding:9px 2px 0 2px;\"><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;\">16</div><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;\">Countries</div></td><td width=\"4\" style=\"width:4px;font-size:1px;line-height:1px;\">&nbsp;</td><td width=\"70\" align=\"center\" valign=\"top\" style=\"width:70px;border-top:3px solid #C9DF81;padding:9px 2px 0 2px;\"><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;\">9,196</div><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;\">MT Annual Capacity</div></td><td width=\"4\" style=\"width:4px;font-size:1px;line-height:1px;\">&nbsp;</td><td width=\"70\" align=\"center\" valign=\"top\" style=\"width:70px;border-top:3px solid #F68029;padding:9px 2px 0 2px;\"><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;\">95,685</div><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;\">MT/KL Coatings Delivered</div></td><td width=\"4\" style=\"width:4px;font-size:1px;line-height:1px;\">&nbsp;</td><td width=\"70\" align=\"center\" valign=\"top\" style=\"width:70px;border-top:3px solid #ED252C;padding:9px 2px 0 2px;\"><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;\">3</div><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;\">ISO Certificates</div></td><td width=\"4\" style=\"width:4px;font-size:1px;line-height:1px;\">&nbsp;</td><td width=\"70\" align=\"center\" valign=\"top\" style=\"width:70px;border-top:3px solid #B81D24;padding:9px 2px 0 2px;\"><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;line-height:21px;font-weight:bold;color:#141414;white-space:nowrap;\">7</div><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.5px;line-height:11px;letter-spacing:0.5px;text-transform:uppercase;color:#5F6672;padding-top:3px;\">BIS Licences</div></td></tr></table><div style=\"font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11.5px;line-height:17px;color:#141414;padding-top:12px;width:520px;\"><b style=\"color:#141414;\">Products:</b>&nbsp; <span style=\"white-space:nowrap;\">Powder Coatings</span><span style=\"color:#01A653;font-weight:bold;\">&nbsp;&middot;&nbsp;</span><span style=\"white-space:nowrap;\">Epoxy Paints</span><span style=\"color:#F68029;font-weight:bold;\">&nbsp;&middot;&nbsp;</span><span style=\"white-space:nowrap;\">PU Paints</span><span style=\"color:#B81D24;font-weight:bold;\">&nbsp;&middot;&nbsp;</span><span style=\"white-space:nowrap;\">Enamels</span><span style=\"color:#678CCA;font-weight:bold;\">&nbsp;&middot;&nbsp;</span><span style=\"white-space:nowrap;\">Speciality Coatings</span></div></td></tr></table>";
+const DEFAULT_PHOTO = "https://raw.githubusercontent.com/praveen123315/SIGNATURE-MAIL/main/images/team-mark-rounded.png";
+const $ = id => document.getElementById(id);
+const ids = ['name', 'title', 'phone', 'email', 'photourl'];
+let mode = 'none';
+let uploaded = '';
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function digits(s) { return s.replace(/\D/g, ''); }
+function phoneParts(raw) {
+  let d = digits(raw);
+  if (d.length === 12 && d.startsWith('91')) d = d.slice(2);
+  if (d.length === 11 && d.startsWith('0')) d = d.slice(1);
+  if (d.length !== 10) return null;
+  return { show: '+91 ' + d.slice(0, 5) + ' ' + d.slice(5), tel: '+91' + d };
+}
+function emailOk(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function urlOk(u) { return /^https:\/\/\S+$/i.test(u); }
+
+function photoSrc() {
+  if (mode === 'upload' && uploaded) return uploaded;
+  if (mode === 'url' && urlOk($('photourl').value.trim())) return $('photourl').value.trim();
+  return DEFAULT_PHOTO;
+}
+
+function build(final) {
+  const name = $('name').value.trim();
+  const title = $('title').value.trim();
+  const email = $('email').value.trim();
+  const ph = phoneParts($('phone').value);
+  const v = {
+    NAME: esc(name || (final ? '' : 'Your Name')),
+    TITLE: esc(title || (final ? '' : 'Designation')),
+    PHONE: esc(ph ? ph.show : ($('phone').value.trim() || '+91 98765 43210')),
+    TEL: esc(ph ? ph.tel : ''),
+    EMAIL: esc(email || 'name@surfacepaints.com'),
+    PHOTO: esc(photoSrc()),
+  };
+  let html = TPL;
+  for (const k in v) html = html.split('{{' + k + '}}').join(v[k]);
+  return html;
+}
+
+function render() {
+  $('sig').innerHTML = build(false);
+  const w = $('warn');
+  if (mode === 'upload' && uploaded) {
+    w.textContent = 'Upload ki hui photo Gmail signature me nahi dikhti (Gmail sirf link wali photo leta hai). Gmail ke liye "Photo link" chunein.';
+    w.style.display = 'block';
+  } else if (mode === 'url' && $('photourl').value.trim() && !urlOk($('photourl').value.trim())) {
+    w.textContent = 'Photo link https:// se shuru hona chahiye.';
+    w.style.display = 'block';
+  } else {
+    w.style.display = 'none';
   }
-  function selectionCopy(el) {
-    const r = document.createRange(); r.selectNode(el);
-    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
-    let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
-    s.removeAllRanges(); return ok;
+  try {
+    const data = Object.fromEntries(ids.map(i => [i, $(i).value]));
+    data.mode = mode === 'upload' ? 'none' : mode;
+    localStorage.setItem('sp-sig', JSON.stringify(data));
+  } catch (e) {}
+}
+
+function validate() {
+  const checks = {
+    'f-name': $('name').value.trim().length > 1,
+    'f-title': $('title').value.trim().length > 1,
+    'f-phone': !!phoneParts($('phone').value),
+    'f-email': emailOk($('email').value.trim()),
+  };
+  let first = null;
+  for (const id in checks) {
+    $(id).classList.toggle('bad', !checks[id]);
+    if (!checks[id] && !first) first = $(id).querySelector('input');
   }
-  document.querySelectorAll('[data-copy]').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const el = document.getElementById(btn.dataset.copy);
-      const html = el.innerHTML;
-      try {
-        await navigator.clipboard.write([new ClipboardItem({
-          'text/html': new Blob([html], { type: 'text/html' }),
-          'text/plain': new Blob([el.innerText], { type: 'text/plain' })
-        })]);
-        flash(btn, true);
-      } catch (e) {
-        flash(btn, selectionCopy(el));
-      }
-    });
-  });
+  if (first) first.focus();
+  return !first;
+}
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
+  $('mode-upload').hidden = m !== 'upload';
+  $('mode-url').hidden = m !== 'url';
+  $('mode-none-hint').hidden = m !== 'none';
+  render();
+}
+
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+function flash(btn, ok, label) {
+  btn.textContent = ok ? 'Copied!' : 'Copy failed';
+  btn.classList.toggle('done', ok);
+  setTimeout(() => { btn.textContent = label; btn.classList.remove('done'); }, 2200);
+}
+function selectionCopy(el) {
+  const r = document.createRange(); r.selectNode(el);
+  const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+  s.removeAllRanges(); return ok;
+}
+
+$('copy').addEventListener('click', async () => {
+  if (!validate()) { toast('Pehle saari details sahi bharein.'); return; }
+  const html = build(true);
+  const holder = $('sig');
+  holder.innerHTML = html;
+  try {
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html], { type: 'text/html' }),
+      'text/plain': new Blob([holder.innerText], { type: 'text/plain' }),
+    })]);
+    flash($('copy'), true, 'Copy signature');
+    toast('Copied. Ab email signature box me paste karein.');
+  } catch (e) {
+    const ok = selectionCopy(holder);
+    flash($('copy'), ok, 'Copy signature');
+    if (ok) toast('Copied. Ab email signature box me paste karein.');
+  }
+});
+
+$('copy-code').addEventListener('click', async () => {
+  if (!validate()) { toast('Pehle saari details sahi bharein.'); return; }
+  const html = build(true);
+  try {
+    await navigator.clipboard.writeText(html);
+    flash($('copy-code'), true, 'Copy HTML code');
+  } catch (e) {
+    const ta = document.createElement('textarea'); ta.value = html; document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {}
+    ta.remove(); flash($('copy-code'), ok, 'Copy HTML code');
+  }
+});
+
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+ids.forEach(i => $(i).addEventListener('input', () => { $(i).closest('.field')?.classList.remove('bad'); render(); }));
+
+$('file').addEventListener('change', () => {
+  const f = $('file').files[0];
+  if (!f) return;
+  const img = new Image();
+  const url = URL.createObjectURL(f);
+  img.onload = () => {
+    const S = 200, R = 28;
+    const c = document.createElement('canvas'); c.width = S; c.height = S;
+    const g = c.getContext('2d');
+    g.fillStyle = '#fff'; g.fillRect(0, 0, S, S);
+    g.beginPath();
+    g.moveTo(R, 0); g.arcTo(S, 0, S, S, R); g.arcTo(S, S, 0, S, R); g.arcTo(0, S, 0, 0, R); g.arcTo(0, 0, S, 0, R);
+    g.closePath(); g.clip();
+    const side = Math.min(img.width, img.height);
+    const sx = (img.width - side) / 2, sy = Math.max(0, (img.height - side) / 2 - side * 0.05);
+    g.drawImage(img, sx, sy, side, side, 0, 0, S, S);
+    uploaded = c.toDataURL('image/jpeg', 0.88);
+    $('thumb').src = uploaded;
+    URL.revokeObjectURL(url);
+    render();
+  };
+  img.onerror = () => { toast('Ye photo khul nahi payi. JPG ya PNG chunein.'); URL.revokeObjectURL(url); };
+  img.src = url;
+});
+
+try {
+  const saved = JSON.parse(localStorage.getItem('sp-sig') || '{}');
+  ids.forEach(i => { if (saved[i]) $(i).value = saved[i]; });
+  if (saved.mode === 'url') mode = 'url';
+} catch (e) {}
+setMode(mode);
 </script>
 </body>
 </html>
